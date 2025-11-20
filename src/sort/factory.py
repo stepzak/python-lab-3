@@ -1,4 +1,4 @@
-from src.sort.algorithms import QuickSort, BubbleSort, CountingSort, RadixSort
+from src.sort.algorithms import QuickSort, BubbleSort, CountingSort, RadixSort, BucketSort, HeapSort
 from src.sort.base import SortingAlgorithm
 
 
@@ -8,6 +8,8 @@ class SortFactory:
         'bubble': BubbleSort,
         "counting": CountingSort,
         "radix": RadixSort,
+        "bucket": BucketSort,
+        "heap": HeapSort
     }
 
     @classmethod

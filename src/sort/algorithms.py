@@ -1,3 +1,4 @@
+import itertools
 import logging
 from math import floor, log2
 from typing import Any, Callable
@@ -79,11 +80,10 @@ class RadixSort(SortingAlgorithm):
     __supports_key__ = True
 
 
-    def _algorithm(self, arr: list[T], key: Callable[[T], Any] | None = None, **kwargs) -> list[T]:
+    def _algorithm(self, arr: list[int], key: Callable[[int], Any] | None = None, base: int = 10) -> list[int]:
         check = (x<0 for x in arr)
         if any(check):
             raise ValueError("RadixSort can only sort non-negative integers")
-        base: int = kwargs.get("base", 10)
         max_value = max(arr)
         log = log2(max_value)/log2(base)
         max_len = floor(log)+1
@@ -94,3 +94,53 @@ class RadixSort(SortingAlgorithm):
             arr = counting_sort.sort(arr = arr, key = key)
             multiplier *= base
         return arr
+
+class BucketSort(SortingAlgorithm):
+    __supports_comparator__ = False
+    __supports_key__ = False
+
+    def _algorithm(self, arr: list[float], key: Callable[[float], Any] | None = None, num_buckets: int = 10) -> list[float]:
+        if any(x<0 or x >=1 for x in arr):
+            raise ValueError("BucketSort can only sort values in [0, 1)")
+        buckets = [[] for _ in range(num_buckets)]
+        for num in arr:
+            buckets[int(num*10)].append(num)
+        quick_sort = QuickSort()
+        for i in range(len(buckets)):
+            bucket = buckets[i]
+            sorted_bucket = quick_sort.sort(arr = bucket)
+            buckets[i] = sorted_bucket
+        return list(itertools.chain.from_iterable(buckets))
+
+class HeapSort(SortingAlgorithm):
+    def _to_heaps(self, arr: list[T], n: int, i: int, key: Callable[[T], Any] | None = None) -> None:
+        largest = i
+        l = 2 * i + 1
+        r = 2 * i + 2
+        largest_el = arr[largest] if not key else key(arr[largest])
+        if l < n:
+            left = arr[l] if not key else key(arr[l])
+            if left > largest_el:
+                largest = l
+                largest_el = arr[largest] if not key else key(arr[largest])
+        if r < n:
+            right = arr[r] if not key else key(arr[r])
+            if right > largest_el:
+                largest = r
+        if largest != i:
+            arr[i], arr[largest] = arr[largest], arr[i]
+
+            self._to_heaps(arr, n, largest, key)
+
+    def _algorithm(self, arr: list[T], key: Callable[[T], Any] | None = None, **kwargs) -> list[T]:
+        n = len(arr)
+
+        for i in range(n // 2 - 1, -1, -1):
+            self._to_heaps(arr, n, i, key)
+
+        for i in range(n-1, 0, -1):
+            arr[0], arr[i] = arr[i], arr[0]
+
+            self._to_heaps(arr, i, 0, key)
+        return arr
+

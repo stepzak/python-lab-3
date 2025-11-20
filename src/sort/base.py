@@ -19,7 +19,7 @@ class SortingAlgorithm(ABC):
              **kwargs) -> list[T]:
         arr_copy = arr.copy()
         if not self.__supports_key__:
-            logger.warning(f"{self.__name__} does not support key")
+            logger.warning(f"{self.__class__.__name__} does not support key")
         unified_key = key
         if self.__supports_comparator__:
             unified_key = self._resolve_cmp(key, cmp)
@@ -33,7 +33,7 @@ class SortingAlgorithm(ABC):
     @staticmethod
     def _resolve_cmp(
                      key: Callable[[T], Any] | None = None,
-                     cmp: Callable[[T, T], int] | None = None) -> Callable[[T], Any]:
+                     cmp: Callable[[T, T], int] | None = None) -> Callable[[T], Any] | None:
 
         if key and cmp:
             def combined_cmp(a, b):
@@ -49,5 +49,5 @@ class SortingAlgorithm(ABC):
         elif key:
             return key
         else:
-            return lambda x: x
+            return None
 
