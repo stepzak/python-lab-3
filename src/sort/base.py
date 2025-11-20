@@ -1,21 +1,33 @@
+import logging
 from abc import ABC, abstractmethod
 from functools import cmp_to_key
 from typing import TypeVar, Callable, Any
 
 T = TypeVar("T")
 
+logger = logging.getLogger(__name__)
+
 class SortingAlgorithm(ABC):
+
+    __supports_key__ = True
+    __supports_comparator__ = True
+
     def sort(self, arr: list[T],
              key: Callable[[T], Any] | None = None,
              reverse: bool = False,
-             cmp: Callable[[T, T], int] | None = None) -> list[T]:
+             cmp: Callable[[T, T], int] | None = None,
+             **kwargs) -> list[T]:
         arr_copy = arr.copy()
-        unified_key = self._resolve_cmp(key, cmp)
-        res = self._algorithm(arr_copy, unified_key)
+        if not self.__supports_key__:
+            logger.warning(f"{self.__name__} does not support key")
+        unified_key = key
+        if self.__supports_comparator__:
+            unified_key = self._resolve_cmp(key, cmp)
+        res = self._algorithm(arr_copy, unified_key, **kwargs)
         return res if not reverse else res[::-1]
 
     @abstractmethod
-    def _algorithm(self, arr: list[T], key: Callable[[T], Any] | None = None,) -> list[T]:
+    def _algorithm(self, arr: list[T], key: Callable[[T], Any] | None = None, **kwargs) -> list[T]:
         pass
 
     @staticmethod
@@ -37,5 +49,5 @@ class SortingAlgorithm(ABC):
         elif key:
             return key
         else:
-            return lambda a: a
+            return lambda x: x
 

@@ -1,4 +1,5 @@
 import logging
+from math import floor, log2
 from typing import Any, Callable
 
 from src.sort.base import SortingAlgorithm, T
@@ -6,7 +7,7 @@ from src.sort.base import SortingAlgorithm, T
 logger = logging.getLogger(__name__)
 
 class QuickSort(SortingAlgorithm):
-    def _algorithm(self, arr: list, key = None):
+    def _algorithm(self, arr: list, key = None, **kwargs) -> list[T]:
         return self._quick_sort(arr, key = key)
     
     def _quick_sort(self, arr: list[T], low: int = 0, high: int | None = None, key = None) -> list[T]:
@@ -35,7 +36,7 @@ class QuickSort(SortingAlgorithm):
 
 class BubbleSort(SortingAlgorithm):
 
-    def _algorithm(self, arr: list[T], key: Callable[[T], Any] | None = None ) -> list[T]:
+    def _algorithm(self, arr: list[T], key: Callable[[T], Any] | None = None, **kwargs ) -> list[T]:
         while True:
             br = True
             for k in range(1, len(arr)):
@@ -48,20 +49,48 @@ class BubbleSort(SortingAlgorithm):
                 return arr
 
 class CountingSort(SortingAlgorithm):
-    def _algorithm(self, arr: list[T], key: Callable[[T], Any] | None = None ) -> list[T]:
+    __supports_comparator__ = False
+    __supports_key__ = True
+
+    def _algorithm(self, arr: list[T], key: Callable[[T], Any] | None = None, **kwargs) -> list[T]:
+        mapped_arr = arr.copy()
         if key:
-            logger.warning("Warning: 'key' argument is not supported for CountingSort and will be ignored")
-        max_val = max(arr)
-        count_arr = [0] * (max_val+1)
-        for num in arr:
+            mapped_arr = list(map(key, mapped_arr))
+        if any((x < 0 for x in mapped_arr)):
+            raise ValueError("CountingSort can only sort non-negative integers")
+        max_val = max(mapped_arr)
+        count_arr = [0] * (max_val +1)
+        for num in mapped_arr:
             count_arr[num] += 1
 
         for i in range(1, len(count_arr)):
             count_arr[i] += count_arr[i - 1]
         out = [0]*len(arr)
 
-        for num in reversed(arr):
-            out[count_arr[num] - 1] = num
-            count_arr[num] -= 1
+        for i in range(len(mapped_arr) - 1, -1, -1):
+            search = mapped_arr[i]
+            out[count_arr[search] - 1] = arr[i]
+            count_arr[search] -= 1
 
         return out
+
+class RadixSort(SortingAlgorithm):
+    __supports_comparator__ = False
+    __supports_key__ = True
+
+
+    def _algorithm(self, arr: list[T], key: Callable[[T], Any] | None = None, **kwargs) -> list[T]:
+        check = (x<0 for x in arr)
+        if any(check):
+            raise ValueError("RadixSort can only sort non-negative integers")
+        base: int = kwargs.get("base", 10)
+        max_value = max(arr)
+        log = log2(max_value)/log2(base)
+        max_len = floor(log)+1
+        multiplier = 1
+        for i in range(max_len):
+            counting_sort = CountingSort()
+            key = lambda x: (x // multiplier) % base
+            arr = counting_sort.sort(arr = arr, key = key)
+            multiplier *= base
+        return arr

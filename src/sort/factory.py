@@ -1,4 +1,4 @@
-from src.sort.algorithms import QuickSort, BubbleSort, CountingSort
+from src.sort.algorithms import QuickSort, BubbleSort, CountingSort, RadixSort
 from src.sort.base import SortingAlgorithm
 
 
@@ -6,7 +6,8 @@ class SortFactory:
     _algorithms = {
         'quick': QuickSort,
         'bubble': BubbleSort,
-        "counting": CountingSort
+        "counting": CountingSort,
+        "radix": RadixSort,
     }
 
     @classmethod

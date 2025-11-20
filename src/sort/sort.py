@@ -10,11 +10,13 @@ def sort(arr: list[T],
         cmp: Callable[[T, T], int] | None = None,
         *,
         algorithm: str = 'quick',
+         **kwargs
 ) -> list[T]:
     algo = SortFactory.create_sorter(algorithm)
-    return algo.sort(arr, key, reverse, cmp)
+    return algo.sort(arr, key, reverse, cmp, **kwargs)
 
 if __name__ == '__main__':
     print(sort([1, 5, 4, 2, 1], algorithm='bubble'))
     print(sort([1, 5, 4, 2, 1]))
-    print(sort([1, 5, 4, 2, 1], algorithm='counting'))
+    print(sort([-1, -5, -4, -2, -1, -5, -3], key = lambda x: -x ,algorithm='counting'))
+    print(sort([52, 45, 456, 12, 1, 3, 2], algorithm='radix', base = 10))
