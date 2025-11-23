@@ -21,3 +21,7 @@ class SortFactory:
     @classmethod
     def register_algorithm(cls, name: str, algorithm_class):
         cls._algorithms[name] = algorithm_class
+
+    @classmethod
+    def get_keys(cls) -> list[str]:
+        return list(cls._algorithms.keys())

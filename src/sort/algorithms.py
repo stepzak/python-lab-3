@@ -17,7 +17,15 @@ class QuickSort(SortingAlgorithm):
 
         if low >= high:
             return [arr[low]] if low == high else []
-        pivot = arr[high]
+        first, middle, last = arr[0], arr[len(arr) // 2], arr[-1]
+        if first <= middle <= last or last <= middle <= first:
+            pivot = middle
+
+        elif middle <= first <= last or last <= first <= middle:
+            pivot = first
+        else:
+            pivot = last
+
         i = low - 1
 
         for j in range(low, high):
