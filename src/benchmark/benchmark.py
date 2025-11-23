@@ -42,7 +42,7 @@ def benchmark_sorts(arrays: dict[cst.SORT_TYPES_TYPE, list[cst.ARR_TYPES_TYPE]] 
 
     return results
 
-def create_table(data: dict[str, dict[str, float]], tablefmt: str = "grid"):
+def create_table(data: dict[str, dict[str, float]], tablefmt: str = "github"):
     headers = ("Algorithm",) + cst.ARR_TYPES
     rows = []
     for k, v in data.items():

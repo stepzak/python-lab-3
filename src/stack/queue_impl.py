@@ -15,6 +15,8 @@ class QueueStack(Stack):
         return self.min_items[-1]
 
     def push(self, value):
+        if not isinstance(value, float):
+            raise TypeError("stack only supports floats")
         self.items.append(value)
         if len(self.min_items) == 0 or value <= self.min_items[-1]:
             self.min_items.append(value)

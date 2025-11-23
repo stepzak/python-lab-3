@@ -25,6 +25,8 @@ class LinkedListStack(Stack):
         self.size = 0
 
     def push(self, value):
+        if not isinstance(value, float):
+            raise TypeError("stack only supports floats")
         new_node = Node(value, self.items)
         self.items = new_node
         self.size += 1

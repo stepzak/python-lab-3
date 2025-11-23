@@ -6,6 +6,8 @@ class ListStack(Stack):
         self.min_items = []
 
     def push(self, x: int) -> None:
+        if not isinstance(x, float):
+            raise TypeError("stack only supports floats")
         self.items.append(x)
         if not self.min_items or x <= self.min_items[-1]:
             self.min_items.append(x)
