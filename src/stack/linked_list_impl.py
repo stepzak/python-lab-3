@@ -54,6 +54,8 @@ class LinkedListStack(Stack):
         return self.size
 
     def min(self):
+        if self.is_empty():
+            raise IndexError('stack is empty')
         return self.min_items.value
 
     def __str__(self):

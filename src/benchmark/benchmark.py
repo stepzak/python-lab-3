@@ -12,7 +12,20 @@ def timeit_once(func: Callable, *args, **kwargs) -> float:
     return end - start
 
 
-def benchmark_sorts(arrays: dict[cst.SORT_TYPES_TYPE, list[cst.ARR_TYPES_TYPE]], iters: int = 1) -> dict[str, dict[str, float | str]]:
+def benchmark_sorts(arrays: dict[cst.SORT_TYPES_TYPE, list[cst.ARR_TYPES_TYPE]] | None = None, iters: int = 1) -> dict[str, dict[str, float | str]]:
+    if not arrays:
+        arrays: dict[cst.SORT_TYPES_TYPE, list[cst.ARR_TYPES_TYPE]] = {
+            "quick": ["all"],
+            "bubble": ["all"],
+            "radix": ["sorted", "nearly_sorted_1%", "nearly_sorted_5%", "nearly_sorted_10%",
+                      "unique_1%", "unique_5%", "unique_10%", "reverse_sorted",
+                      "random_int", "random_int_distinct"],
+            "heap": ["all"],
+            "bucket": ["random_float_normalized"],
+            "counting": ["sorted", "nearly_sorted_1%", "nearly_sorted_5%", "nearly_sorted_10%",
+                         "unique_1%", "unique_5%", "unique_10%", "reverse_sorted",
+                         "random_int", "random_int_distinct"]
+        }
     results = {algo_name: {} for algo_name in arrays.keys()}
 
     gen_arrays = ArrayGenerator.array_gen()
@@ -20,7 +33,7 @@ def benchmark_sorts(arrays: dict[cst.SORT_TYPES_TYPE, list[cst.ARR_TYPES_TYPE]],
         if "all" in v:
             v = cst.ARR_TYPES
         for arr_type in v:
-            arr = gen_arrays[arr_type]
+            arr = gen_arrays[arr_type].copy()
             results[k][arr_type] = 0.0
             for it in range(iters):
                 res = timeit_once(sort, arr = arr, algorithm = k)
@@ -43,17 +56,6 @@ def create_table(data: dict[str, dict[str, float]], tablefmt: str = "grid"):
 
 
 if __name__ == "__main__":
-    benchmarks: dict[cst.SORT_TYPES_TYPE, list[cst.ARR_TYPES_TYPE]] = {
-        "quick": ["all"],
-        "bubble": ["all"],
-        "radix": ["sorted", "nearly_sorted_1%", "nearly_sorted_5%", "nearly_sorted_10%",
-                    "unique_1%", "unique_5%", "unique_10%", "reverse_sorted",
-                    "random_int", "random_int_distinct"],
-        "heap": ["all"],
-        "bucket": ["random_float_normalized"],
-        "counting": ["sorted", "nearly_sorted_1%", "nearly_sorted_5%", "nearly_sorted_10%",
-                    "unique_1%", "unique_5%", "unique_10%", "reverse_sorted",
-                    "random_int", "random_int_distinct"]
-    }
-    res = benchmark_sorts(benchmarks, 5)
-    print(create_table(res))
+
+    res_b = benchmark_sorts(iters = 5)
+    print(create_table(res_b))

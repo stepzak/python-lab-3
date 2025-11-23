@@ -17,22 +17,26 @@ class QuickSort(SortingAlgorithm):
 
         if low >= high:
             return [arr[low]] if low == high else []
-        first, middle, last = arr[0], arr[len(arr) // 2], arr[-1]
-        if first <= middle <= last or last <= middle <= first:
-            pivot = middle
+        mid = (low + high) // 2
+        first, middle, last = arr[low], arr[mid], arr[high]
 
+        if first <= middle <= last or last <= middle <= first:
+            pivot_index = mid
         elif middle <= first <= last or last <= first <= middle:
-            pivot = first
+            pivot_index = low
         else:
-            pivot = last
+            pivot_index = high
+
+        arr[pivot_index], arr[high] = arr[high], arr[pivot_index]
+        pivot_val = arr[high]
 
         i = low - 1
 
         for j in range(low, high):
             current_val = key(arr[j]) if key else arr[j]
-            pivot_val = key(pivot) if key else pivot
+            pivot_val_key = key(pivot_val) if key else pivot_val
 
-            if current_val <= pivot_val:
+            if current_val <= pivot_val_key:
                 i += 1
                 arr[i], arr[j] = arr[j], arr[i]
 
@@ -40,7 +44,7 @@ class QuickSort(SortingAlgorithm):
         pivot_index = i + 1
 
         return (self._quick_sort(arr, low, pivot_index - 1, key) +
-                [arr[pivot_index]] +
+                [pivot_val] +
                 self._quick_sort(arr, pivot_index + 1, high, key))
 
 class BubbleSort(SortingAlgorithm):

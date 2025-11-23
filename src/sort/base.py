@@ -18,7 +18,7 @@ class SortingAlgorithm(ABC):
              cmp: Callable[[T, T], int] | None = None,
              **kwargs) -> list[T]:
         arr_copy = arr.copy()
-        if not self.__supports_key__:
+        if not self.__supports_key__ and key:
             logger.warning(f"{self.__class__.__name__} does not support key")
         unified_key = key
         if self.__supports_comparator__:
