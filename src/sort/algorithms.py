@@ -89,7 +89,7 @@ class CountingSort(SortingAlgorithm):
 
 class RadixSort(SortingAlgorithm):
     __supports_comparator__ = False
-    __supports_key__ = True
+    __supports_key__ = False
 
 
     def _algorithm(self, arr: list[int], key: Callable[[int], Any] | None = None, base: int = 10) -> list[int]:
@@ -120,7 +120,7 @@ class BucketSort(SortingAlgorithm):
         quick_sort = QuickSort()
         for i in range(len(buckets)):
             bucket = buckets[i]
-            sorted_bucket = quick_sort.sort(arr = bucket)
+            sorted_bucket = quick_sort.sort(arr = bucket, key = key)
             buckets[i] = sorted_bucket
         return list(itertools.chain.from_iterable(buckets))
 

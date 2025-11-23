@@ -5,9 +5,9 @@ class ListStack(Stack):
         self.items = []
         self.min_items = []
 
-    def push(self, x: int) -> None:
-        if not isinstance(x, float):
-            raise TypeError("stack only supports floats")
+    def push(self, x: float) -> None:
+        if not isinstance(x, (float, int)):
+            raise TypeError("stack only supports floats and ints")
         self.items.append(x)
         if not self.min_items or x <= self.min_items[-1]:
             self.min_items.append(x)
@@ -15,7 +15,7 @@ class ListStack(Stack):
     def is_empty(self) -> bool:
         return not self.items
 
-    def pop(self) -> int:
+    def pop(self) -> float:
         if self.is_empty():
             raise IndexError('stack is empty')
         ret = self.items.pop()
@@ -23,7 +23,7 @@ class ListStack(Stack):
             self.min_items.pop()
         return ret
 
-    def peek(self) -> int:
+    def peek(self) -> float:
         if self.is_empty():
             raise IndexError('stack is empty')
         return self.items[-1]

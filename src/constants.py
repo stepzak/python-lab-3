@@ -8,3 +8,4 @@ ARR_TYPES_TYPE = Literal[
         "all"
     ]
 ARR_TYPES = get_args(ARR_TYPES_TYPE)[:-1]
+ARR_TYPES_INT = ARR_TYPES[:-3]

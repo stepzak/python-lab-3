@@ -19,6 +19,7 @@ class SortingAlgorithm(ABC):
              **kwargs) -> list[T]:
         arr_copy = arr.copy()
         if not self.__supports_key__ and key:
+            key = None
             logger.warning(f"{self.__class__.__name__} does not support key")
         unified_key = key
         if self.__supports_comparator__:
