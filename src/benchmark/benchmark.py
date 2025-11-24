@@ -17,14 +17,10 @@ def benchmark_sorts(arrays: dict[cst.SORT_TYPES_TYPE, list[cst.ARR_TYPES_TYPE]] 
         arrays: dict[cst.SORT_TYPES_TYPE, list[cst.ARR_TYPES_TYPE]] = {
             "quick": ["all"],
             "bubble": ["all"],
-            "radix": ["sorted", "nearly_sorted_1%", "nearly_sorted_5%", "nearly_sorted_10%",
-                      "unique_1%", "unique_5%", "unique_10%", "reverse_sorted",
-                      "random_int", "random_int_distinct"],
+            "radix": cst.ARR_TYPES_INT,
             "heap": ["all"],
             "bucket": ["random_float_normalized"],
-            "counting": ["sorted", "nearly_sorted_1%", "nearly_sorted_5%", "nearly_sorted_10%",
-                         "unique_1%", "unique_5%", "unique_10%", "reverse_sorted",
-                         "random_int", "random_int_distinct"]
+            "counting": cst.ARR_TYPES_INT
         }
     results = {algo_name: {} for algo_name in arrays.keys()}
 

@@ -60,6 +60,7 @@ class ArrayGenerator:
             'unique_1%': many_duplicates(size, max(1, size // 100), seed=42),
             'unique_5%': many_duplicates(size, max(1, size // 20), seed=42),
             'unique_10%': many_duplicates(size, max(1, size // 10), seed=42),
+            'unique_50%': many_duplicates(size, max(1, size // 2), seed=42),
             'reverse_sorted': reserve_sorted(size),
             'random_int': rand_int_array(size, 0, size, seed=42),
             'random_int_distinct': rand_int_array(size, 0, size + 1, distinct=True, seed=42),
